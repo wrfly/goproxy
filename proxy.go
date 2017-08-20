@@ -9,8 +9,6 @@ import (
 	"os"
 	"regexp"
 	"sync/atomic"
-
-	"github.com/wrfly/goproxy/ext/dig"
 )
 
 // The basic proxy type. Implements http.Handler.
@@ -102,7 +100,7 @@ func (proxy *ProxyHttpServer) ServeHTTP(w http.ResponseWriter, r *http.Request) 
 
 		var err error
 		// rebuild request
-		r.URL.Host = dig.SelectIP(r.Host)
+		// r.URL.Host = dig.SelectIP(r.Host)
 		ctx.Logf("Got request %v %v %v %v", r.URL.Path, r.Host, r.Method, r.URL.String())
 		if !r.URL.IsAbs() {
 			proxy.NonproxyHandler.ServeHTTP(w, r)
@@ -118,6 +116,7 @@ func (proxy *ProxyHttpServer) ServeHTTP(w http.ResponseWriter, r *http.Request) 
 				resp = proxy.filterResponse(nil, ctx)
 				if resp == nil {
 					ctx.Logf("error read response %v %v:", r.URL.Host, err.Error())
+					w.Header().Add("PROXY_CODE", "500")
 					http.Error(w, err.Error(), 500)
 					return
 				}
