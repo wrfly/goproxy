@@ -4,7 +4,7 @@ import (
 	"crypto/tls"
 	"crypto/x509"
 
-	"github.com/elazarl/goproxy"
+	"github.com/wrfly/goproxy"
 )
 
 var caCert = []byte(`-----BEGIN CERTIFICATE-----
